@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PDF Annotation Tool
 
-## Getting Started
+A feature-rich PDF annotation tool built with Next.js, allowing users to view, annotate, and sign PDF documents in the browser.
 
-First, run the development server:
+## Features
+
+- **PDF Viewing**: View PDF documents with smooth page navigation using **pdf.js**
+- **Annotation Tools**:
+  - Highlight text
+  - Underline text
+  - Freehand drawing
+  - Add comments
+- **Signature Support**: Capture and embed digital signatures
+- **Export Functionality**: Save annotated PDFs with all modifications
+- **Responsive UI**: Built with **shadcn/ui** and **Tailwind CSS**
+- **User Feedback**: Toast notifications with **Sonner**
+
+
+## Tech Stack
+
+### Core Libraries
+| Library | Purpose |
+|---------|---------|
+| **Next.js** | React framework for SSR/SSG |
+| **pdf.js** | High-performance PDF rendering (Mozilla's PDF viewer) |
+| **pdf-lib** | PDF manipulation & annotation embedding |
+| **shadcn/ui** | Reusable, accessible UI components |
+| **Tailwind CSS** | Utility-first styling |
+| **Sonner** | Elegant toast notifications |
+| **Lucide React** | SVG icons |
+| **react-dropzone** | Drag-and-drop file uploads |
+
+---
+### Prerequisites
+- Node.js v18+
+- pnpm v8+
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Clone repository
+git clone https://github.com/abdulgafar01/frontend-test.git
+cd frontend-tes
+
+# Install dependencies
+npm install
+
+# Configure environment
+cp .env.example .env.local
+
+# Start development server
+npm dev
 ```
+## Challenges & Solutions
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| Challenge | Solution |
+|-----------|----------|
+### Signature Embedding	Used pdf-lib to convert canvas drawings to PDF vectors with proper coordinate transformation
+### Responsive Design	used tailwind css and shandcn ui
+### Cross-browser Rendering	Added PDF.js compatibility layer for Safari and legacy browsers
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Future implementation I would add if I had more time
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### fix pdf rendering 
+### fix pdf worker js using pdf-dist
+### Smart Highlighting
+### Document Summarization
+### Auto-Tagging
