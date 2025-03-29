@@ -130,3 +130,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+@layer components {
+  .glassmorphism {
+    @apply bg-white/80 backdrop-blur-md border border-white/30 shadow-accent;
+  }}

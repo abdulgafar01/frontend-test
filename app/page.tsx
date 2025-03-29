@@ -48,7 +48,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col w-full h-screen overflow-hidden bg-background p-4 sm:p-6">
-    <header className="mb-6">
+    <header className="mb-6 text-center">
       <h1 className="text-3xl font-medium text-gradient">PDF Annotator</h1>
       <p className="text-muted-foreground">Upload, annotate, and export PDF documents with ease</p>
     </header>
@@ -107,9 +107,6 @@ export default function Home() {
           </div>
         </div>
         )}
-
-
-
         
       <SignatureCanvas
         isOpen={isDrawingSignature}

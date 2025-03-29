@@ -1,9 +1,13 @@
-"use client";
-import { useState, useRef, useEffect, useCallback } from "react";
-import { Document, Page, pdfjs } from "react-pdf";
-import { Loader2 } from "lucide-react";
+'use client'
 
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+import React, { useRef, useState, useEffect } from 'react';
+import * as pdfjsLib from 'pdfjs-dist';
+import { AnnotationLayer } from './AnnotationLayer';
+import { CommentPanel } from './CommentPanel';
+import { deflate } from 'zlib';
+
+// Set worker path
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 interface PDFViewerProps {
   file: File | null;
@@ -17,153 +21,126 @@ interface PDFViewerProps {
   addAnnotation: (event: React.MouseEvent, pageEl: HTMLElement) => void;
 }
 
-const PDFViewer = ({
+const PDFViewer: React.FC<PDFViewerProps> = ({
   file,
-  currentPage = 1,
+  currentPage,
   totalPages,
-  scale = 1.0,
+  scale,
   annotations,
   comments,
   setComments,
   activeAnnotation,
   addAnnotation,
-}: PDFViewerProps) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [pageWidth, setPageWidth] = useState<number | null>(null);
-  const [numPages, setNumPages] = useState<number | null>(null);
-  
-  const containerRef = useRef<HTMLDivElement>(null);
+}) => {
   const pageRef = useRef<HTMLDivElement>(null);
-
-  // Get the file URL or data URI
-  const getFile = useCallback(() => {
-    if (!file) return null;
-    return URL.createObjectURL(file);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [selectedAnnotationId, setSelectedAnnotationId] = useState<string | null>(null);
+  const [showComments, setShowComments] = useState(false);
+  const [pdfDocument, setPdfDocument] = useState<pdfjsLib.PDFDocumentProxy | null>(null);
+  
+  useEffect(() => {
+    const loadPdf = async () => {
+      if (!file) return;
+      
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+        setPdfDocument(pdf);
+      } catch (error) {
+        console.error('Failed to load PDF:', error);
+      }
+    };
+    
+    loadPdf();
+    
+    return () => {
+      if (pdfDocument) {
+        pdfDocument.destroy();
+      }
+    };
   }, [file]);
-
-  // Handle document load success
-  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
-    setNumPages(numPages);
-    setIsLoading(false);
+  
+  useEffect(() => {
+    const renderPage = async () => {
+      if (!pdfDocument || !canvasRef.current || currentPage < 1 || currentPage > pdfDocument.numPages) return;
+      
+      try {
+        const page = await pdfDocument.getPage(currentPage);
+        const viewport = page.getViewport({ scale });
+        
+        // Prepare canvas
+        const canvas = canvasRef.current;
+        const context = canvas.getContext('2d');
+        if (!context) return;
+        
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        
+        // Render PDF page
+        await page.render({
+          canvasContext: context,
+          viewport: viewport
+        }).promise;
+      } catch (error) {
+        console.error('Failed to render page:', error);
+      }
+    };
+    
+    renderPage();
+  }, [pdfDocument, currentPage, scale]);
+  
+  const handleAnnotationClick = (id: string) => {
+    setSelectedAnnotationId(id);
+    setShowComments(true);
   };
-
-  // Handle document load error
-  const onDocumentLoadError = (error: Error) => {
-    console.error('PDF load error:', error);
-    setError(`Failed to load PDF: ${error.message}`);
-    setIsLoading(false);
-  };
-
-  // Handle page click for annotations
+  
   const handlePageClick = (e: React.MouseEvent) => {
     if (activeAnnotation && pageRef.current) {
       addAnnotation(e, pageRef.current);
     }
   };
-
-  // Handle window resize
-  useEffect(() => {
-    const handleResize = () => {
-      if (containerRef.current) {
-        setPageWidth(containerRef.current.clientWidth * 0.9);
-      }
-    };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Clean up object URL when component unmounts or file changes
-  useEffect(() => {
-    const fileUrl = getFile();
-    return () => {
-      if (fileUrl) {
-        URL.revokeObjectURL(fileUrl);
-      }
-    };
-  }, [getFile]);
+  
+  const handleCloseComments = () => {
+    setShowComments(false);
+    setSelectedAnnotationId(null);
+  };
 
   return (
-    <div 
-      ref={containerRef}
-      className="flex items-center justify-center w-full h-full bg-gray-50 relative"
-      style={{ cursor: activeAnnotation ? 'crosshair' : 'auto' }}
-    >
-      {isLoading && (
-        <div className="flex flex-col items-center justify-center absolute inset-0">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="mt-2 text-sm text-muted-foreground">Loading PDF...</p>
-        </div>
-      )}
-
-      {error && (
-        <div className="text-red-500 p-4 bg-red-50 rounded-lg absolute inset-0 flex items-center justify-center">
-          {error}
-        </div>
-      )}
-
-      {!isLoading && !error && (
+    <div className="flex w-full h-full overflow-hidden">
+      <div 
+        className="flex-grow flex items-center justify-center overflow-auto p-4 bg-primary/5"
+        style={{ cursor: activeAnnotation ? 'crosshair' : 'default' }}
+      >
         <div 
+          className="relative"
           ref={pageRef}
           onClick={handlePageClick}
-          className="relative"
         >
-          <Document
-            file={getFile()}
-            onLoadSuccess={onDocumentLoadSuccess}
-            onLoadError={onDocumentLoadError}
-            loading={
-              <div className="flex flex-col items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <p className="mt-2 text-sm text-muted-foreground">Loading document...</p>
-              </div>
-            }
-            noData={
-              <div className="p-4 text-center text-muted-foreground">
-                No PDF file selected
-              </div>
-            }
-          >
-            <Page
-              pageNumber={currentPage}
-              scale={scale}
-              width={pageWidth || undefined}
-              className="border border-gray-200 shadow-sm"
-              renderTextLayer={false}
-              renderAnnotationLayer={false}
-              loading={
-                <div className="flex flex-col items-center justify-center">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                  <p className="mt-2 text-sm text-muted-foreground">Loading page {currentPage}...</p>
-                </div>
-              }
-            />
-          </Document>
-
-          {/* Render annotations layer */}
-          {annotations
-            .filter(ann => ann.position.pageIndex === currentPage - 1)
-            .map(annotation => (
-              <div
-                key={annotation.id}
-                style={{
-                  position: 'absolute',
-                  left: `${annotation.position.x}px`,
-                  top: `${annotation.position.y}px`,
-                  backgroundColor: annotation.type === 'highlight' ? annotation.color || 'yellow' : 'transparent',
-                  opacity: 0.5,
-                  width: '100px',
-                  height: '20px',
-                  pointerEvents: 'none',
-                }}
-              />
-            ))}
+          <div className="bg-white rounded-lg shadow-subtle overflow-hidden">
+            <canvas ref={canvasRef} />
+          </div>
+          <AnnotationLayer 
+            annotations={annotations}
+            currentPage={currentPage}
+            scale={scale}
+            onSelectAnnotation={handleAnnotationClick}
+          />
+        </div>
+      </div>
+      
+      {showComments && (
+        <div className="animate-slide-in">
+          <CommentPanel 
+            comments={comments}
+            setComments={setComments}
+            selectedAnnotationId={selectedAnnotationId}
+            onClose={handleCloseComments}
+          />
         </div>
       )}
     </div>
   );
 };
 
-export default PDFViewer;
+
+export default PDFViewer

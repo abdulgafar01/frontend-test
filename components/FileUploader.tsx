@@ -19,22 +19,7 @@ interface FileUploaderProps {
       handleFileUpload,
     }: FileUploaderProps) => {
       
-    // const onDrop = useCallback(
-    //     (acceptedFiles: File[]) => {
-    //       if (acceptedFiles.length > 0) {
-    //         handleFileUpload(acceptedFiles[0]);
-    //       }
-    //     },
-    //     [handleFileUpload]
-    //   );
-    
-      // const { getRootProps, getInputProps, isDragActive } = useDropzone({
-      //   onDrop,
-      //   accept: {
-      //     "application/pdf": [".pdf"],
-      //   },
-      //   multiple: false,
-      // });
+  
 
       const fileInputRef = useRef<HTMLInputElement>(null);
 
