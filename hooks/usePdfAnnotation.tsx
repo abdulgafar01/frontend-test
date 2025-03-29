@@ -1,5 +1,6 @@
 'use client'
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef} from 'react';
+// import { pdfjs } from 'react-pdf';
 import { toast} from 'sonner';
 
 type AnnotationType = 'highlight' | 'underline' | 'comment' | 'signature';
@@ -51,7 +52,7 @@ export function usePdfAnnotation() {
     setIsLoading(true);
     setFile(uploadedFile);
     
-    // Simulate PDF loading
+  //   // Simulate PDF loading
     setTimeout(() => {
       setIsLoading(false);
       setTotalPages(Math.floor(Math.random() * 10) + 1); // Simulate random page count
@@ -61,6 +62,47 @@ export function usePdfAnnotation() {
      
     }, 1500);
   }, []);
+
+  // const handleFileUpload = useCallback(async (uploadedFile: File) => {
+  //   if (uploadedFile.type !== 'application/pdf') {
+  //     toast.error('Please upload a PDF document');
+  //     return;
+  //   }
+
+  //   setIsLoading(true);
+  //   setFile(uploadedFile);
+    
+  //   let fileUrl: string | null = null;
+
+  //   try {
+  //     fileUrl = URL.createObjectURL(uploadedFile);
+  //     const pdf = await pdfjs.getDocument(fileUrl).promise;
+      
+  //     setTotalPages(pdf.numPages);
+  //     setCurrentPage(1);
+  //     toast.success('Document uploaded successfully');
+  //   } catch (error) {
+  //     console.error('Error loading PDF:', error);
+  //     toast.error('Failed to load PDF document');
+  //     setFile(null);
+  //     setTotalPages(0);
+  //   } finally {
+  //     setIsLoading(false);
+  //     if (fileUrl) {
+  //       URL.revokeObjectURL(fileUrl);
+  //     }
+  //   }
+  // }, []);
+
+  // // Cleanup effect
+  // useEffect(() => {
+  //   return () => {
+  //     if (file) {
+  //       URL.revokeObjectURL(URL.createObjectURL(file));
+  //     }
+  //   };
+  // }, [file]);
+
 
   // Drag and drop handlers
   const handleDragOver = useCallback((e: React.DragEvent) => {
