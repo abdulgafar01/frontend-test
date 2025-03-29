@@ -48,10 +48,13 @@ export default function Home() {
 
   return (
     <div className="flex flex-col w-full h-screen overflow-hidden bg-background p-4 sm:p-6">
-    <header className="mb-6 text-center">
-      <h1 className="text-3xl font-medium text-gradient">PDF Annotator</h1>
-      <p className="text-muted-foreground">Upload, annotate, and export PDF documents with ease</p>
-    </header>
+      {
+        !file ? (  <header className="mb-6 text-center">
+          <h1 className="text-3xl font-medium text-gradient">PDF Annotator</h1>
+          <p className="text-muted-foreground">Upload, annotate, and export PDF documents with ease</p>
+        </header>):(<div></div>)
+      }
+  
 
     {isLoading && (
       <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50">

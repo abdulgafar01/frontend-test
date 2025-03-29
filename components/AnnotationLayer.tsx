@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { MessageSquare } from 'lucide-react';
+import Image from 'next/image';
 
 interface Annotation {
   id: string;
@@ -54,12 +55,13 @@ export const AnnotationLayer: React.FC<AnnotationLayerProps> = ({
                 height: `${(annotation.height || 100) * scale}px`,
               }}
             >
-              <img
-                src={annotation.content}
-                alt="Signature"
-                className="w-full h-full object-contain"
-                draggable={false}
-              />
+                <Image
+                    src={annotation.content}
+                    alt="Signature"
+                    className="w-full h-full object-contain"
+                    draggable={false}
+                 />
+             
             </div>
           );
         }

@@ -9,14 +9,39 @@ import { CommentPanel } from './CommentPanel';
 // Set worker path
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
+type AnnotationType = 'highlight' | 'underline' | 'comment' | 'signature';
+type ColorType = string;
+
+interface Annotation {
+  id: string;
+  type: AnnotationType;
+  color: ColorType;
+  position: {
+    x: number;
+    y: number;
+    pageIndex: number;
+  };
+  content?: string;
+  path?: string[];
+  width?: number;
+  height?: number;
+}
+
+interface Comment {
+  id: string;
+  annotationId: string;
+  text: string;
+  timestamp: Date;
+}
+
 interface PDFViewerProps {
   file: File | null;
   currentPage: number;
   totalPages: number;
   scale: number;
-  annotations: any[];
-  comments: any[];
-  setComments: (comments: any[]) => void;
+  annotations: Annotation[];
+  comments: Comment[];
+  setComments: (comments: Comment[]) => void;
   activeAnnotation: string | null;
   addAnnotation: (event: React.MouseEvent, pageEl: HTMLElement) => void;
 }
