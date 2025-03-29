@@ -1,6 +1,6 @@
 'use client'
 import { useState, useCallback, useRef } from 'react';
-import { toast } from 'sonner';
+import { toast} from 'sonner';
 
 type AnnotationType = 'highlight' | 'underline' | 'comment' | 'signature';
 type ColorType = string;
@@ -56,7 +56,9 @@ export function usePdfAnnotation() {
       setIsLoading(false);
       setTotalPages(Math.floor(Math.random() * 10) + 1); // Simulate random page count
       setCurrentPage(1);
+    
       toast.success('Document uploaded successfully');
+     
     }, 1500);
   }, []);
 
