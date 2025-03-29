@@ -4,7 +4,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
 import { AnnotationLayer } from './AnnotationLayer';
 import { CommentPanel } from './CommentPanel';
-import { deflate } from 'zlib';
+
 
 // Set worker path
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
@@ -24,7 +24,6 @@ interface PDFViewerProps {
 const PDFViewer: React.FC<PDFViewerProps> = ({
   file,
   currentPage,
-  totalPages,
   scale,
   annotations,
   comments,

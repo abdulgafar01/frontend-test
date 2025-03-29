@@ -5,14 +5,14 @@ import { SignatureCanvas } from "@/components/SignatureCanvas";
 import { Toolbar } from "@/components/ToolBar";
 import { usePdfAnnotation } from "@/hooks/usePdfAnnotation";
 
-interface Annotation {
-  id: string;
-  type: string;
-  position: { x: number; y: number };
-  data?: any;
-  page: number;
-  color?: string;
-}
+// interface Annotation {
+//   id: string;
+//   type: string;
+//   position: { x: number; y: number };
+//   data?: any;
+//   page: number;
+//   color?: string;
+// }
 
 export default function Home() {
   const {

@@ -1,7 +1,6 @@
-import { cn } from "@/lib/utils";
-import { FileUp, Upload } from "lucide-react";
-import { useCallback, useRef } from "react";
-import { useDropzone } from "react-dropzone";
+import { FileUp} from "lucide-react";
+import { useRef } from "react";
+
 import { Button } from "./ui/button";
 
 
