@@ -1,10 +1,9 @@
 "use client"
 import FileUploader from "@/components/FileUploader";
 import PDFViewer from "@/components/PDFViewer";
+import { SignatureCanvas } from "@/components/SignatureCanvas";
 import { Toolbar } from "@/components/ToolBar";
 import { usePdfAnnotation } from "@/hooks/usePdfAnnotation";
-import { useState } from "react";
-
 
 interface Annotation {
   id: string;
@@ -95,15 +94,15 @@ export default function Home() {
           
           <div className="flex-grow overflow-hidden">
             <PDFViewer
-              file={file}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              scale={scale}
-              annotations={annotations}
-              comments={comments}
-              setComments={setComments}
-              activeAnnotation={activeAnnotation}
-              addAnnotation={addAnnotation}
+               file={file}
+               currentPage={currentPage}
+               totalPages={totalPages}
+               scale={scale}
+               annotations={annotations}
+               comments={comments}
+               setComments={setComments}
+               activeAnnotation={activeAnnotation}
+               addAnnotation={addAnnotation}
             />
           </div>
         </div>
@@ -111,23 +110,13 @@ export default function Home() {
 
 
 
-    {/* {!file ? (
-      <div className="flex-grow flex items-center justify-center">
-        <div className="w-full max-w-2xl animate-fade-in">
-         
-        </div>
-      </div>
-    ) : (
-      <div className="flex-grow flex flex-col h-full overflow-hidden">
-      
         
-        <div className="flex-grow overflow-hidden">
-        
-        </div>
-      </div>
-    )} */}
-
-  
+      <SignatureCanvas
+        isOpen={isDrawingSignature}
+        onSave={saveSignature}
+        onCancel={cancelSignature}
+        canvasRef={canvasRef}
+      />
 
     <footer className="py-4 text-center text-xs text-muted-foreground">
       <p>PDF Annotator | A beautiful document annotation tool</p>

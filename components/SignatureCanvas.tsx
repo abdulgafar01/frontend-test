@@ -1,14 +1,14 @@
+'use client'
 
 import React, { useRef, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { X } from 'lucide-react';
 
 interface SignatureCanvasProps {
   isOpen: boolean;
   onSave: (signatureData: string) => void;
   onCancel: () => void;
-  canvasRef: React.RefObject<HTMLCanvasElement>;
+  canvasRef: React.RefObject<HTMLCanvasElement | null>;
 }
 
 export const SignatureCanvas: React.FC<SignatureCanvasProps> = ({
@@ -164,7 +164,7 @@ export const SignatureCanvas: React.FC<SignatureCanvasProps> = ({
           <Button 
             onClick={handleSave} 
             disabled={!hasStartedDrawing}
-            className="bg-primary hover:bg-primary/90 text-white"
+            className="bg-blue-600  text-white"
           >
             Save Signature
           </Button>

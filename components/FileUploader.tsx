@@ -19,22 +19,22 @@ interface FileUploaderProps {
       handleFileUpload,
     }: FileUploaderProps) => {
       
-    const onDrop = useCallback(
-        (acceptedFiles: File[]) => {
-          if (acceptedFiles.length > 0) {
-            handleFileUpload(acceptedFiles[0]);
-          }
-        },
-        [handleFileUpload]
-      );
+    // const onDrop = useCallback(
+    //     (acceptedFiles: File[]) => {
+    //       if (acceptedFiles.length > 0) {
+    //         handleFileUpload(acceptedFiles[0]);
+    //       }
+    //     },
+    //     [handleFileUpload]
+    //   );
     
-      const { getRootProps, getInputProps, isDragActive } = useDropzone({
-        onDrop,
-        accept: {
-          "application/pdf": [".pdf"],
-        },
-        multiple: false,
-      });
+      // const { getRootProps, getInputProps, isDragActive } = useDropzone({
+      //   onDrop,
+      //   accept: {
+      //     "application/pdf": [".pdf"],
+      //   },
+      //   multiple: false,
+      // });
 
       const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -56,8 +56,8 @@ interface FileUploaderProps {
       onDrop={handleDrop}
     >
       <div className="flex flex-col items-center text-center px-4 py-10 animate-float">
-        <div className="w-16 h-16 mb-6 rounded-full bg-primary/10 flex items-center justify-center">
-          <FileUp className="h-8 w-8 text-primary animate-pulse-subtle" />
+        <div className="w-16 h-16 mb-6 rounded-full bg-blue-400 flex items-center justify-center">
+          <FileUp className="h-8 w-8 text-gray-50 animate-pulse-subtle" />
         </div>
         <h3 className="text-xl font-medium mb-2">Upload PDF Document</h3>
         <p className="text-muted-foreground mb-8 max-w-sm">
@@ -72,7 +72,7 @@ interface FileUploaderProps {
         />
         <Button
           onClick={handleButtonClick}
-          className="relative group overflow-hidden bg-blue-500  text-white px-6 py-2 rounded-lg"
+          className="relative overflow-hidden bg-blue-500  text-white px-6 py-2 rounded-lg"
         >
           <span className="relative z-10">Select PDF File</span>
         </Button>
